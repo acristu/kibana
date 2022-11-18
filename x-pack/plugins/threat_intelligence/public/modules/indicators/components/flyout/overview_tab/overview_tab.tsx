@@ -23,6 +23,7 @@ import { unwrapValue } from '../../../utils';
 import { IndicatorEmptyPrompt } from '../empty_prompt';
 import { IndicatorBlock } from './block';
 import { HighlightedValuesTable } from './highlighted_values_table';
+import { DiscoverButton } from '../../discover_matches_button';
 
 const highLevelFields = [
   RawIndicatorFieldId.Feed,
@@ -87,6 +88,15 @@ export const IndicatorsFlyoutOverview: VFC<IndicatorsFlyoutOverviewProps> = ({
       </EuiTitle>
 
       {indicatorDescription}
+
+      <DiscoverButton
+        label={`${unwrapValue(
+          indicator,
+          RawIndicatorFieldId.DetectionMatches
+        )} matches in your environment`}
+        value={unwrapValue(indicator, RawIndicatorFieldId.DetectionMatches) as number}
+        id={indicator._id}
+      />
 
       <EuiSpacer />
 

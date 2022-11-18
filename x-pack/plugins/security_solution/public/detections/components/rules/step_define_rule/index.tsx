@@ -69,6 +69,7 @@ import {
   isThreatMatchRule,
   isThresholdRule,
   isQueryRule,
+  isThreatMarkerRule,
 } from '../../../../../common/detection_engine/utils';
 import { EqlQueryBar } from '../eql_query_bar';
 import { DataViewSelector } from '../data_view_selector';
@@ -83,6 +84,7 @@ import { getIsRulePreviewDisabled } from '../rule_preview/helpers';
 import { GroupByFields } from '../group_by_fields';
 import { useLicense } from '../../../../common/hooks/use_license';
 import { minimumLicenseForSuppression } from '../../../../../common/detection_engine/rule_schema';
+import { ThreatMarkerInput } from '../threat_marker_input';
 
 const CommonUseField = getUseField({ component: Field });
 
@@ -489,6 +491,16 @@ const StepDefineRuleComponent: FC<StepDefineRuleProps> = ({
     ]
   );
 
+  const ThreatMarkerInputChildren = useMemo(
+    () => (
+      <ThreatMarkerInput
+        threatIndexModified={threatIndexModified}
+        handleResetThreatIndices={handleResetThreatIndices}
+      />
+    ),
+    [handleResetThreatIndices, threatIndexModified]
+  );
+
   const dataViewIndexPatternToggleButtonOptions: EuiButtonGroupOptionProps[] = useMemo(
     () => [
       {
@@ -770,7 +782,6 @@ const StepDefineRuleComponent: FC<StepDefineRuleProps> = ({
               )}
             </>
           </RuleTypeEuiFormRow>
-
           {isQueryRule(ruleType) && (
             <>
               <EuiSpacer size="s" />
@@ -795,7 +806,6 @@ const StepDefineRuleComponent: FC<StepDefineRuleProps> = ({
               </RuleTypeEuiFormRow>
             </>
           )}
-
           <RuleTypeEuiFormRow $isVisible={isQueryRule(ruleType)}>
             <UseField
               path="groupByFields"
@@ -808,7 +818,6 @@ const StepDefineRuleComponent: FC<StepDefineRuleProps> = ({
               }}
             />
           </RuleTypeEuiFormRow>
-
           <RuleTypeEuiFormRow $isVisible={isMlRule(ruleType)} fullWidth>
             <>
               <UseField
@@ -869,6 +878,13 @@ const StepDefineRuleComponent: FC<StepDefineRuleProps> = ({
                 {ThreatMatchInputChildren}
               </UseMultiFields>
             </>
+          </RuleTypeEuiFormRow>
+          <RuleTypeEuiFormRow
+            $isVisible={isThreatMarkerRule(ruleType)}
+            data-test-subj="threatMatchInput"
+            fullWidth
+          >
+            <>{ThreatMarkerInputChildren}</>
           </RuleTypeEuiFormRow>
           <RuleTypeEuiFormRow
             $isVisible={isNewTermsRule(ruleType)}
